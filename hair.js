@@ -20,7 +20,7 @@ const norm = (v) => { const l = Math.hypot(v[0], v[1], v[2]) || 1; v[0] /= l; v[
 
 export function buildHair(THREE) {
   const r = rng(42), strands = [];
-  const dark = [0.16, 0.075, 0.045], warm = [0.42, 0.2, 0.12];
+  const dark = [0.028, 0.011, 0.006], warm = [0.13, 0.052, 0.026];
   const colFor = () => { const t = Math.pow(r(), 1.6); return [dark[0] + (warm[0] - dark[0]) * t, dark[1] + (warm[1] - dark[1]) * t, dark[2] + (warm[2] - dark[2]) * t]; };
   const tipCol = (c) => [c[0] * 1.25, c[1] * 1.2, c[2] * 1.1];
 
@@ -57,7 +57,7 @@ export function buildHair(THREE) {
       pts.push([BUN[0] + Math.cos(a) * r0, BUN[1] + Math.sin(a) * r0 * 0.8 - ry, BUN[2] - 0.12 + Math.sin(a * 0.5) * 0.08 - 0.05 * Math.cos(a)]);
     }
     const c = colFor();
-    strands.push({ pts, w0: 0.03, w1: 0.012, taper: 2, col: c, col1: tipCol(c) });
+    strands.push({ pts, w0: 0.024, w1: 0.01, taper: 2, col: c, col1: tipCol(c) });
   }
 
   // ---- face-framing long locks (in front of ears, over cheeks) ----
@@ -80,15 +80,15 @@ export function buildHair(THREE) {
       strands.push({ pts, w0: 0.026, w1: 0.004, taper: 1.2, col: c, col1: tipCol(c) });
     }
   };
-  lock(-1, 260, 2.1, 0.8, 1);
-  lock(1, 320, 2.7, 0.6, 1.4);
+  lock(-1, 300, 1.55, 0.9, 0.6);
+  lock(1, 360, 2.0, 0.7, 0.9);
 
   // ---- flyaway wisps ----
-  for (let n = 0; n < 160; n++) {
+  for (let n = 0; n < 45; n++) {
     const p = sampleRoot(); for (let j = 0; j < 3; j++) p[j] *= 1.03;
     const sx = Math.sign(p[0]) || 1, dir = norm([sx * r(), r() - 0.2, r() - 0.6]);
     const pts = [[...p]];
-    for (let k = 0; k < 22; k++) { dir[0] += (r() - 0.5) * 0.3; dir[1] += (r() - 0.55) * 0.3; norm(dir); for (let j = 0; j < 3; j++) p[j] += dir[j] * 0.025; hull(p, 1.06); pts.push([...p]); }
+    for (let k = 0; k < 12; k++) { dir[0] += (r() - 0.5) * 0.2; dir[1] += (r() - 0.6) * 0.2; norm(dir); for (let j = 0; j < 3; j++) p[j] += dir[j] * 0.025; hull(p, 1.06); pts.push([...p]); }
     strands.push({ pts, w0: 0.006, w1: 0.002, col: warm });
   }
 
@@ -110,7 +110,7 @@ export function buildHair(THREE) {
     if (ok) keep.push(ix[i], ix[i + 1], ix[i + 2]);
   }
   cg.setIndex(keep); cg.computeVertexNormals();
-  const cap = new THREE.Mesh(cg, new THREE.MeshStandardMaterial({ color: '#2a140c', roughness: 0.7 }));
+  const cap = new THREE.Mesh(cg, new THREE.MeshStandardMaterial({ color: '#1c0d07', roughness: 0.7 }));
   cap.receiveShadow = true;
 
   const g = new THREE.Group(); g.add(cap, hair);
