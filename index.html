@@ -1,0 +1,21 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Realistic Head — Claude Opus 5.5 · three.js WebGPU</title>
+<link rel="stylesheet" href="style.css">
+<script type="importmap">{"imports":{"three":"./vendor/three/build/three.webgpu.js","three/webgpu":"./vendor/three/build/three.webgpu.js","three/tsl":"./vendor/three/build/three.tsl.js","three/addons/":"./vendor/three/examples/jsm/"}}</script>
+</head><body>
+<div id="stage"><canvas id="c"></canvas><div id="badge"></div></div>
+<button id="gear" title="Settings">⚙</button>
+<div id="panel" hidden>
+  <h3>Settings</h3>
+  <label>Backend <select id="backend"><option value="webgpu">WebGPU</option><option value="webgl">WebGL 2</option></select></label>
+  <label>Resolution <select id="res"></select></label>
+  <label>View <select id="view"><option>front</option><option>threequarter</option><option>left</option><option>right</option><option>back</option></select></label>
+  <label><input type="checkbox" id="spin"> Auto-rotate</label>
+  <p class="hint">Drag to orbit · pinch / wheel to zoom</p>
+</div>
+<div id="prompt" hidden><p>WebGPU is not available in this browser.</p><button id="toGL">Switch to WebGL</button></div>
+<div id="err" hidden></div>
+<script type="module" src="main.js"></script>
+</body></html>
