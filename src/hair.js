@@ -66,15 +66,15 @@ export function buildHair(THREE) {
     for (let n = 0; n < count; n++) {
       const a = (0.3 + r() * 0.75) * side, y = 0.6 - r() * 0.4;
       const p = [Math.sin(a) * 0.79 * 1.01, y, Math.cos(a) * 0.95 * 1.01];
-      const dir = norm([side * 0.45, -0.85, 0.2]);
+      const dir = norm([side * 0.75, -0.55, 0.15]);
       const pts = [[...p]];
       const L = len * (0.7 + r() * 0.45), steps = Math.floor(L / 0.03), wob = r() * 6.28, wa = 0.004 + r() * 0.006;
       for (let k = 0; k < steps; k++) {
-        dir[1] -= 0.09; dir[0] += side * 0.005 * spread; dir[2] += fwd * 0.01; norm(dir);
+        dir[1] -= 0.06 + 0.04 * sstep(0.45, 0.1, p[1]); dir[0] += side * 0.005 * spread; dir[2] += fwd * 0.01; norm(dir);
         for (let j = 0; j < 3; j++) p[j] += dir[j] * 0.03;
         p[0] += Math.sin(k * 0.25 + wob) * wa; p[2] += Math.cos(k * 0.2 + wob) * wa;
         hull(p, 1.02 + 0.03 * r());
-        if (p[1] < 0.3 && Math.abs(p[0]) < 0.68) p[0] += (side * 0.68 - p[0]) * 0.35; // ease off the face
+        if (Math.abs(p[0]) < 0.68) p[0] += (side * 0.68 - p[0]) * 0.12 * sstep(0.6, 0.2, p[1]); // ease off the face
         pts.push([...p]);
       }
       const c = colFor();
