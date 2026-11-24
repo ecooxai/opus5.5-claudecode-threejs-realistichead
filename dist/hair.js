@@ -1,7 +1,7 @@
 // Procedural strand hair: center part, swept back into a low bun, long face-framing locks.
 import { rng, sstep, ribbons } from './util.js';
 
-const HL = [[0, 0.64], [0.35, 0.6], [0.7, 0.5], [1.05, 0.12], [1.35, -0.15], [1.8, -0.35], [2.4, -0.62], [Math.PI, -0.72]];
+const HL = [[0, 0.64], [0.35, 0.6], [0.7, 0.5], [1.05, -0.02], [1.35, -0.3], [1.8, -0.35], [2.4, -0.62], [Math.PI, -0.72]];
 export function hairlineY(x, z) {
   const a = Math.abs(Math.atan2(x, z));
   for (let i = 1; i < HL.length; i++) if (a <= HL[i][0]) { const f = (a - HL[i - 1][0]) / (HL[i][0] - HL[i - 1][0]); return HL[i - 1][1] + (HL[i][1] - HL[i - 1][1]) * f; }
@@ -20,7 +20,7 @@ const norm = (v) => { const l = Math.hypot(v[0], v[1], v[2]) || 1; v[0] /= l; v[
 
 export function buildHair(THREE) {
   const r = rng(42), strands = [];
-  const dark = [0.028, 0.011, 0.006], warm = [0.13, 0.052, 0.026];
+  const dark = [0.018, 0.007, 0.004], warm = [0.1, 0.038, 0.018];
   const colFor = () => { const t = Math.pow(r(), 1.6); return [dark[0] + (warm[0] - dark[0]) * t, dark[1] + (warm[1] - dark[1]) * t, dark[2] + (warm[2] - dark[2]) * t]; };
   const tipCol = (c) => [c[0] * 1.25, c[1] * 1.2, c[2] * 1.1];
 
@@ -63,9 +63,9 @@ export function buildHair(THREE) {
   // ---- face-framing long locks (in front of ears, over cheeks) ----
   const lock = (side, count, len, fwd, spread) => {
     for (let n = 0; n < count; n++) {
-      const a = (0.35 + r() * 0.55) * side, y = 0.55 - r() * 0.25;
+      const a = (0.5 + r() * 0.6) * side, y = 0.52 - r() * 0.35;
       const p = [Math.sin(a) * 0.79 * 1.01, y, Math.cos(a) * 0.95 * 1.01];
-      const dir = norm([side * 0.8, -0.6, 0.15]);
+      const dir = norm([side * 0.45, -0.85, 0.2]);
       const pts = [[...p]];
       const L = len * (0.7 + r() * 0.45), steps = Math.floor(L / 0.03), wob = r() * 6.28, wa = 0.004 + r() * 0.006;
       for (let k = 0; k < steps; k++) {
@@ -73,7 +73,7 @@ export function buildHair(THREE) {
         for (let j = 0; j < 3; j++) p[j] += dir[j] * 0.03;
         p[0] += Math.sin(k * 0.25 + wob) * wa; p[2] += Math.cos(k * 0.2 + wob) * wa;
         hull(p, 1.02 + 0.03 * r());
-        if (p[1] < 0.1 && Math.abs(p[0]) < 0.66) p[0] = side * 0.66; // keep off the face
+        if (p[1] < 0.3 && Math.abs(p[0]) < 0.68) p[0] += (side * 0.68 - p[0]) * 0.35; // ease off the face
         pts.push([...p]);
       }
       const c = colFor();
@@ -106,7 +106,7 @@ export function buildHair(THREE) {
   const ix = cg.index.array, keep = [];
   for (let i = 0; i < ix.length; i += 3) {
     let ok = false;
-    for (let j = 0; j < 3; j++) { const v = ix[i + j]; if (cp.getY(v) > hairlineY(cp.getX(v), cp.getZ(v)) + 0.02) ok = true; }
+    for (let j = 0; j < 3; j++) { const v = ix[i + j]; if (cp.getY(v) > hairlineY(cp.getX(v), cp.getZ(v)) + 0.06) ok = true; }
     if (ok) keep.push(ix[i], ix[i + 1], ix[i + 2]);
   }
   cg.setIndex(keep); cg.computeVertexNormals();

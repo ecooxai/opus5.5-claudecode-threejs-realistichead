@@ -36,7 +36,8 @@ export function buildHair(THREE) {
   // ---- swept-back strands into the bun ----
   for (let n = 0; n < 7000; n++) {
     const p = sampleRoot(), layer = 1.0 + r() * 0.07, sx = Math.sign(p[0]) || 1;
-    const dir = norm([sx * (0.9 + r() * 0.3), -0.25, -0.35 - Math.max(0, -p[2]) * 0.5]);
+    const lat = sstep(-0.55, 0.25, p[2]); // back strands fall straight down into the bun
+    const dir = norm([sx * (0.9 + r() * 0.3) * lat, -0.25 - (1 - lat) * 0.8, -0.35 - Math.max(0, -p[2]) * 0.5 * lat]);
     const pts = [[...p]];
     const twist = r() * 6.28;
     let k = 0;

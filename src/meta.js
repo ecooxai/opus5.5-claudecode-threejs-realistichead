@@ -1,3 +1,3 @@
 // Iteration bookkeeping shown in the previewer badge.
-export const ITERATION = 3;
-export const SCORE = 48;
+export const ITERATION = 4;
+export const SCORE = 55;

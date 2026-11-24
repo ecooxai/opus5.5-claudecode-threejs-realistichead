@@ -48,10 +48,10 @@ async function start() {
   scene.background = bgTexture();
   const pm = new THREE.PMREMGenerator(renderer);
   scene.environment = pm.fromScene(new RoomEnvironment(), 0.04).texture;
-  scene.environmentIntensity = 0.55;
+  scene.environmentIntensity = 0.45;
 
   // daylight: warm key from upper right, cool sky fill, soft rim
-  const key = new THREE.DirectionalLight('#fff3e6', 2.6); key.position.set(3, 4, 5);
+  const key = new THREE.DirectionalLight('#fff3e6', 3.0); key.position.set(3, 4, 5);
   key.castShadow = true; key.shadow.mapSize.set(2048, 2048); key.shadow.bias = -0.0004; key.shadow.normalBias = 0.02;
   Object.assign(key.shadow.camera, { left: -3, right: 3, top: 3, bottom: -4, near: 1, far: 15 });
   scene.add(key, new THREE.HemisphereLight('#dfe9ff', '#c8b8b0', 0.9));
