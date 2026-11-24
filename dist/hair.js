@@ -1,7 +1,7 @@
 // Procedural strand hair: center part, swept back into a low bun, long face-framing locks.
 import { rng, sstep, ribbons } from './util.js';
 
-const HL = [[0, 0.64], [0.35, 0.6], [0.7, 0.5], [1.05, -0.02], [1.35, -0.3], [1.8, -0.35], [2.4, -0.62], [Math.PI, -0.72]];
+const HL = [[0, 0.64], [0.3, 0.6], [0.6, 0.42], [0.8, 0.22], [1.05, -0.02], [1.35, -0.3], [1.8, -0.35], [2.4, -0.62], [Math.PI, -0.72]];
 export function hairlineY(x, z) {
   const a = Math.abs(Math.atan2(x, z));
   for (let i = 1; i < HL.length; i++) if (a <= HL[i][0]) { const f = (a - HL[i - 1][0]) / (HL[i][0] - HL[i - 1][0]); return HL[i - 1][1] + (HL[i][1] - HL[i - 1][1]) * f; }
@@ -64,7 +64,7 @@ export function buildHair(THREE) {
   // ---- face-framing long locks (in front of ears, over cheeks) ----
   const lock = (side, count, len, fwd, spread) => {
     for (let n = 0; n < count; n++) {
-      const a = (0.5 + r() * 0.6) * side, y = 0.52 - r() * 0.35;
+      const a = (0.3 + r() * 0.75) * side, y = 0.6 - r() * 0.4;
       const p = [Math.sin(a) * 0.79 * 1.01, y, Math.cos(a) * 0.95 * 1.01];
       const dir = norm([side * 0.45, -0.85, 0.2]);
       const pts = [[...p]];
@@ -81,8 +81,8 @@ export function buildHair(THREE) {
       strands.push({ pts, w0: 0.026, w1: 0.004, taper: 1.2, col: c, col1: tipCol(c) });
     }
   };
-  lock(-1, 300, 1.55, 0.9, 0.6);
-  lock(1, 360, 2.0, 0.7, 0.9);
+  lock(-1, 420, 1.55, 0.9, 0.6);
+  lock(1, 480, 2.0, 0.7, 0.9);
 
   // ---- flyaway wisps ----
   for (let n = 0; n < 45; n++) {

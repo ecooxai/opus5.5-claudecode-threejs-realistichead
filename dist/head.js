@@ -1,10 +1,10 @@
 // Procedural head: sculpted ellipsoid + painted skin, eyes, brows, lashes, neck/chest.
 import { rng, sstep, g2, ribbons } from './util.js';
 
-export const RX = 0.74, RY = 1.0, RZ = 0.9;
+export const RX = 0.71, RY = 1.0, RZ = 0.9;
 export const EYE = { x: 0.29, y: 0.035, r: 0.118, w: 0.13 };
 
-const taperX = (dy) => 1 - 0.24 * sstep(-0.3, -0.95, dy) - 0.05 * sstep(0.3, 1, dy);
+const taperX = (dy) => 1 - 0.3 * sstep(-0.3, -0.98, dy) - 0.05 * sstep(0.3, 1, dy);
 const taperZ = (dy) => 1 - 0.12 * sstep(-0.4, -1.0, dy);
 
 // eyelid curves (t in -1..1, positive = outer corner)
@@ -52,8 +52,8 @@ export function sculpt(x, y, noHole = false) {
   d -= 0.03 * Math.exp(-(((y - my + 0.012) / 0.018) ** 2)) * mw;       // mouth opening
   d -= 0.018 * g2(ax, y, 0.22, -0.53, 0.025, 0.04);                    // mouth corner dimples
   d -= 0.015 * g2(x, y, 0, -0.72, 0.1, 0.03);                         // mentolabial sulcus
-  d += 0.05 * g2(x, y, 0, -0.84, 0.16, 0.09);                         // chin
-  d += 0.02 * g2(ax, y, 0.4, -0.6, 0.12, 0.15);                        // jaw fullness
+  d += 0.07 * g2(x, y, 0, -0.86, 0.13, 0.1);                         // chin
+  d += 0.01 * g2(ax, y, 0.4, -0.6, 0.12, 0.15);                        // jaw fullness
   d += eyeTerms(x, y, noHole);
   return d;
 }
