@@ -2,14 +2,14 @@
 import { rng, sstep, g2, ribbons } from './util.js';
 
 export const RX = 0.74, RY = 1.0, RZ = 0.9;
-export const EYE = { x: 0.285, y: 0.035, r: 0.108, w: 0.118 };
+export const EYE = { x: 0.29, y: 0.035, r: 0.118, w: 0.13 };
 
-const taperX = (dy) => 1 - 0.30 * sstep(-0.25, -0.95, dy) - 0.05 * sstep(0.3, 1, dy);
+const taperX = (dy) => 1 - 0.24 * sstep(-0.3, -0.95, dy) - 0.05 * sstep(0.3, 1, dy);
 const taperZ = (dy) => 1 - 0.12 * sstep(-0.4, -1.0, dy);
 
 // eyelid curves (t in -1..1, positive = outer corner)
-const lidU = (t) => 0.058 * Math.pow(Math.max(0, 1 - t * t), 0.65) + 0.010 * t;
-const lidL = (t) => -0.030 * Math.pow(Math.max(0, 1 - t * t), 0.85) + 0.008 * t;
+const lidU = (t) => 0.068 * Math.pow(Math.max(0, 1 - t * t), 0.65) + 0.010 * t;
+const lidL = (t) => -0.036 * Math.pow(Math.max(0, 1 - t * t), 0.85) + 0.008 * t;
 // smile mouth line
 export const mouthY = (x) => -0.575 + 0.95 * x * x;
 
@@ -52,7 +52,7 @@ export function sculpt(x, y, noHole = false) {
   d -= 0.03 * Math.exp(-(((y - my + 0.012) / 0.018) ** 2)) * mw;       // mouth opening
   d -= 0.018 * g2(ax, y, 0.22, -0.53, 0.025, 0.04);                    // mouth corner dimples
   d -= 0.015 * g2(x, y, 0, -0.72, 0.1, 0.03);                         // mentolabial sulcus
-  d += 0.075 * g2(x, y, 0, -0.84, 0.13, 0.09);                         // chin
+  d += 0.05 * g2(x, y, 0, -0.84, 0.16, 0.09);                         // chin
   d += 0.02 * g2(ax, y, 0.4, -0.6, 0.12, 0.15);                        // jaw fullness
   d += eyeTerms(x, y, noHole);
   return d;
@@ -72,7 +72,7 @@ function skinTexture(THREE, S = 2048) {
   const c = cv.getContext('2d');
   const P = (x, y) => [U(x) * S, (1 - V(y)) * S];
   const R = (r) => (r / 1.7) * S;
-  c.fillStyle = '#f2cfbf'; c.fillRect(0, 0, S, S);
+  c.fillStyle = '#f6dacb'; c.fillRect(0, 0, S, S);
   const rad = (x, y, r, col, a) => {
     const [px, py] = P(x, y), gr = c.createRadialGradient(px, py, 0, px, py, R(r));
     gr.addColorStop(0, col.replace('A', a)); gr.addColorStop(1, col.replace('A', 0));
@@ -81,7 +81,7 @@ function skinTexture(THREE, S = 2048) {
   // warm/cool variation
   rad(0, 0.55, 0.5, 'rgba(250,228,215,A)', 0.6);           // bright forehead
   for (const s of [-1, 1]) {
-    rad(s * 0.38, -0.25, 0.22, 'rgba(240,120,130,A)', 0.42); // blush
+    rad(s * 0.38, -0.25, 0.22, 'rgba(240,130,140,A)', 0.3); // blush
     rad(s * 0.3, 0.12, 0.12, 'rgba(190,120,110,A)', 0.25);   // eyeshadow
     rad(s * 0.3, -0.02, 0.07, 'rgba(200,110,110,A)', 0.18);
   }
@@ -236,15 +236,15 @@ function buildBody(THREE, mat) {
   for (let j = 0; j <= NY; j++) {
     const y = y0 + (y1 - y0) * j / NY;
     const sh = sstep(-1.75, -2.55, y);
-    const a = 0.32 + (1.72 - 0.32) * Math.pow(sh, 0.8) - 0.05 * sstep(-0.9, -1.4, y) * (1 - sh);
-    const b = 0.31 + (0.62 - 0.31) * sh;
+    const a = 0.32 + (1.45 - 0.32) * Math.pow(sh, 0.8) - 0.05 * sstep(-0.9, -1.4, y) * (1 - sh);
+    const b = 0.31 + (0.5 - 0.31) * sh;
     const cz = -0.12 + 0.05 * sh;
     for (let i = 0; i <= NA; i++) {
       const th = i / NA * Math.PI * 2, cs = Math.cos(th), sn = Math.sin(th);
       const e = 2 / (2 + 1.4 * sh);
       const x = a * Math.sign(sn) * Math.pow(Math.abs(sn), e), z = cz + b * Math.sign(cs) * Math.pow(Math.abs(cs), e);
       // trapezius slope: shoulders lower at the edges
-      const yy = y - 0.18 * sh * Math.pow(Math.abs(x) / 1.72, 2) + 0.12 * sh * (1 - Math.min(1, Math.abs(x) / 0.6));
+      const yy = y - 0.18 * sh * Math.pow(Math.abs(x) / 1.45, 2) + 0.12 * sh * (1 - Math.min(1, Math.abs(x) / 0.6));
       pos.push(x, yy, z); uvs.push(0.5, 0.02);
     }
   }
@@ -253,7 +253,7 @@ function buildBody(THREE, mat) {
   g.setAttribute('position', new THREE.Float32BufferAttribute(pos, 3));
   g.setAttribute('uv', new THREE.Float32BufferAttribute(uvs, 2));
   g.setIndex(idx); g.computeVertexNormals();
-  mat.map = null; mat.color = new THREE.Color('#f0cdbd');
+  mat.map = null; mat.color = new THREE.Color('#f3d3c3');
   const m = new THREE.Mesh(g, mat); m.castShadow = m.receiveShadow = true;
   return m;
 }

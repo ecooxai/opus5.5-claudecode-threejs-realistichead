@@ -38,8 +38,8 @@ export function sculpt(x, y, noHole = false) {
   d += 0.02 * g2(ax, y, 0.5, -0.05, 0.12, 0.15);                      // cheekbones
   // nose
   const bridge = sstep(0.12, -0.3, y) * (y > -0.33 ? 1 : Math.exp(-(((y + 0.33) / 0.03) ** 2)));
-  d += (0.025 + 0.085 * bridge) * Math.exp(-((x / (0.05 + 0.03 * bridge)) ** 2)) * sstep(0.2, 0.05, y);
-  d += 0.055 * g2(x, y, 0, -0.29, 0.06, 0.06);                         // tip
+  d += (0.03 + 0.1 * bridge) * Math.exp(-((x / (0.05 + 0.03 * bridge)) ** 2)) * sstep(0.2, 0.05, y);
+  d += 0.065 * g2(x, y, 0, -0.29, 0.06, 0.06);                         // tip
   d += 0.04 * g2(ax, y, 0.085, -0.325, 0.045, 0.035);                  // alae
   d -= 0.03 * g2(ax, y, 0.07, -0.37, 0.03, 0.015);                    // nostril shadows
   d -= 0.012 * g2(ax, y, 0.13, -0.33, 0.02, 0.05);                     // alar crease
@@ -236,8 +236,8 @@ function buildBody(THREE, mat) {
   for (let j = 0; j <= NY; j++) {
     const y = y0 + (y1 - y0) * j / NY;
     const sh = sstep(-1.75, -2.55, y);
-    const a = 0.32 + (1.45 - 0.32) * Math.pow(sh, 0.8) - 0.05 * sstep(-0.9, -1.4, y) * (1 - sh);
-    const b = 0.31 + (0.5 - 0.31) * sh;
+    const a = 0.36 + (1.45 - 0.36) * Math.pow(sh, 0.8) - 0.05 * sstep(-0.9, -1.4, y) * (1 - sh);
+    const b = 0.34 + (0.5 - 0.34) * sh;
     const cz = -0.12 + 0.05 * sh;
     for (let i = 0; i <= NA; i++) {
       const th = i / NA * Math.PI * 2, cs = Math.cos(th), sn = Math.sin(th);
